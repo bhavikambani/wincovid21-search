@@ -16,6 +16,9 @@ import org.apache.http.HttpStatus;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,11 +26,16 @@ import java.util.List;
 
 @AllArgsConstructor
 @Setter
+@Component
 public class ResourceDaoImpl implements ResourceDao {
 
+    @Autowired
     private String esResourceEndPoint;
+    @Autowired
     private HttpHelper httpHelper;
+    @Autowired
     private EsQueryBuilder esQueryBuilder;
+    @Autowired
     private JSONParser jsonParser;
 
     @Override

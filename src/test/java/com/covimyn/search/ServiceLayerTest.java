@@ -34,11 +34,11 @@ public class ServiceLayerTest {
 
     public static void main(String[] args) throws Exception {
         //testUpsert();
-        testSearch();
+        //testSearch();
     }
 
 
-    public static void testSearch() throws Exception {
+    /*public static void testSearch() throws Exception {
         ResourceDao resourceDao = new ResourceDaoImpl(esIndex, httpHelper, esQueryBuilder, jsonParser);
         ResourceService resourceService = new ResourceServiceImpl(resourceDao);
 
@@ -56,7 +56,7 @@ public class ServiceLayerTest {
         for(ResourceResponse resourceResponse : resourceResponses) {
             System.out.println(objectMapper.writeValueAsString(resourceResponse));
         }
-    }
+    }*/
 
     private static void testUpsert() throws IOException {
         ResourceDao resourceDao = new ResourceDaoImpl(esIndex, httpHelper, esQueryBuilder, jsonParser);

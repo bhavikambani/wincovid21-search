@@ -22,7 +22,7 @@ public class ResourceController {
         // GET
     //apicontollurl/path?q:id=1&city="bangalore"&district="xyz"
     //Query1: state, city, resourceType
-    //Query2: state, city, resourceType,isVerified
+    //Query2: state, city, resourceType,isVerifiedcurl --location --request GET 'http://localhost:8080/search?id=1234'
     //Query3: id
     @GetMapping(path = "/search")
     public List<ResourceResponse> search( @QueryParam("id") String id,

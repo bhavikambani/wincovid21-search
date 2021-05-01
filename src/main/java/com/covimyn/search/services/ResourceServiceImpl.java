@@ -10,6 +10,7 @@ import com.covimyn.search.interfaces.ResourceResponse;
 import com.covimyn.search.model.ResourceModel;
 import com.covimyn.search.pojo.Pair;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
+@Component
 public class ResourceServiceImpl implements ResourceService {
 
     private ResourceDao resourceDao;
@@ -48,7 +50,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public List<ResourceResponse> search(String id, String state, String city, String resourceType, String isVerified,
-                           int offset, int rows, String sortOrder) throws Exception{
+                           Integer offset, Integer rows, String sortOrder) throws Exception{
         List<ResourceResponse> resourceResponses = new ArrayList<>();
         List<Pair> must = new ArrayList<>();
         if(id != null) {

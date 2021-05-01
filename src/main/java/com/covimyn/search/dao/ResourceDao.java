@@ -6,10 +6,12 @@ package com.covimyn.search.dao;
 
 import com.covimyn.search.model.ResourceModel;
 import com.covimyn.search.pojo.Pair;
+import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.List;
 
+@Repository
 public interface ResourceDao {
 
     String upsert(ResourceModel resourceModel) throws IOException;

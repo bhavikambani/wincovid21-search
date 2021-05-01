@@ -7,10 +7,11 @@ package com.covimyn.search.utility;
 import com.covimyn.search.pojo.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-
+@Component
 public class EsQueryBuilder {
 
     public JSONObject generateSearchQuery(List<Pair> mustParams, List<Pair> shouldParams, int page, int size) {
