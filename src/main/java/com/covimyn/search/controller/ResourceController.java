@@ -1,5 +1,6 @@
 package com.covimyn.search.controller;
 
+import com.covimyn.search.interfaces.ResourceEntryResponse;
 import com.covimyn.search.interfaces.ResourceRequest;
 import com.covimyn.search.interfaces.ResourceResponse;
 import com.covimyn.search.services.ResourceService;
@@ -26,9 +27,8 @@ public class ResourceController {
     @Autowired
     ResourceService resourceService;
 
-    // GET
     //Query1: state, city, resourceType
-    //Query2: state, city, resourceType,isVerifiedcurl --location --request GET 'http://localhost:8080/search?id=1234'
+    //Query2: state, city, resourceType,isVerified
     //Query3: id
     @GetMapping(path = "/search")
     public ResponseEntity search(@QueryParam("id") String id,
@@ -40,13 +40,11 @@ public class ResourceController {
                                          @DefaultValue("10") @QueryParam("rows") Integer rows,
                                          @DefaultValue("ASC") @QueryParam("sortOrder") String sortOrder
     ){
-
         try {
-            logger.debug("***Logging search call ***");
             List<ResourceResponse> resourceResponseList = resourceService.search(id, state, city, resourceType, isVerified, offset, rows, sortOrder);
-            return new ResponseEntity(resourceResponseList,HttpStatus.OK);
+            return new ResponseEntity(ResourceEntryResponse.of(resourceResponseList),HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(ResourceEntryResponse.errorResponseOfException(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
