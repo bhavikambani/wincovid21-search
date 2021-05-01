@@ -37,11 +37,13 @@ public class EsQueryBuilder {
             should.add(term);
         }
 
-        JSONObject mustToBool = new JSONObject();
-        JSONObject mustToBoolVal = new JSONObject();
-        mustToBoolVal.put("should", should);
-        mustToBool.put("bool", mustToBoolVal);
-        must.add(mustToBool);
+        if(shouldParams != null && shouldParams.size() > 0) {
+            JSONObject mustToBool = new JSONObject();
+            JSONObject mustToBoolVal = new JSONObject();
+            mustToBoolVal.put("should", should);
+            mustToBool.put("bool", mustToBoolVal);
+            must.add(mustToBool);
+        }
 
         JSONObject boolValue = new JSONObject();
         boolValue.put("must", must);
