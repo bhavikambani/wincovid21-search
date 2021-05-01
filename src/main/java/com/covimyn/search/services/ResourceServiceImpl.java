@@ -11,6 +11,7 @@ import com.covimyn.search.model.ResourceModel;
 import com.covimyn.search.pojo.Pair;
 import lombok.AllArgsConstructor;
 
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +27,57 @@ public class ResourceServiceImpl implements ResourceService {
         return resourceDao.upsert(resourceModel);
     }
 
+//    @Override
+//    public Response search(List<Pair> must, List<Pair> should, int page, int size, boolean byLatest)
+//           {
+//               List<ResourceResponse> resourceResponses = new ArrayList<>();
+//
+//               try{
+//                   List<ResourceModel> resourceModels = byLatest ? resourceDao.searchByLatest(must, should, page, size) :
+//                           resourceDao.search(must, should, page, size);
+//                   for(ResourceModel resourceModel : resourceModels) {
+//                       resourceResponses.add(transformResourceModelToResourceResponse(resourceModel));
+//                   }
+//                   return Response.status(Response.Status.OK).entity(resourceModels).build();
+//               }catch (){
+//                   return Response.status(Response.Status.OK).entity(resourceModels).build();
+//               }
+//
+//
+//    }
+
     @Override
-    public List<ResourceResponse> search(List<Pair> must, List<Pair> should, int page, int size, boolean byLatest)
-            throws Exception {
+    public List<ResourceResponse> search(String id, String state, String city, String resourceType, String isVerified,
+                           int offset, int rows, String sortOrder) throws Exception{
         List<ResourceResponse> resourceResponses = new ArrayList<>();
-        List<ResourceModel> resourceModels = byLatest ? resourceDao.searchByLatest(must, should, page, size) :
-                resourceDao.search(must, should, page, size);
-        for(ResourceModel resourceModel : resourceModels) {
-            resourceResponses.add(transformResourceModelToResourceResponse(resourceModel));
+        List<Pair> must = new ArrayList<>();
+        if(id != null) {
+            must.add(new Pair("id", id));
         }
+
+        if(state != null) {
+            must.add(new Pair("state", state));
+        }
+
+        if(city != null) {
+            must.add(new Pair("city", city));
+        }
+
+        if(resourceType != null) {
+            must.add(new Pair("resourceType", resourceType));
+        }
+
+        if(isVerified != null) {
+            must.add(new Pair("verified", true));
+        }
+
+        List<ResourceModel> resourceModels = resourceDao.searchByLatest(must, new ArrayList<Pair>(), offset,
+                rows);
+
+        for(ResourceModel resourceModel : resourceModels) {
+                       resourceResponses.add(transformResourceModelToResourceResponse(resourceModel));
+        }
+
         return resourceResponses;
     }
 
