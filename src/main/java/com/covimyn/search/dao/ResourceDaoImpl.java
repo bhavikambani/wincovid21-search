@@ -42,11 +42,12 @@ public class ResourceDaoImpl implements ResourceDao {
     public String upsert(ResourceModel resourceModel) throws IOException {
         ApiHelperResponse response = httpHelper.makeHttpPostRequest(esResourceEndPoint + "/" +
                 Constant.ES_RESOURCE_INDEX_TYPE + "/" + resourceModel.getId(), resourceModel);
-        if(response.getStatusCode() != HttpStatus.SC_CREATED) {
-            throw new RuntimeException("Returned non 201 response code[" +response.getStatusCode()+ "] " +
-                    "with a phrase '" + response.getReasonPhrase()+ "'on persistence");
+        if(response.getStatusCode() == HttpStatus.SC_CREATED || response.getStatusCode() == HttpStatus.SC_OK)  {
+            return (String) response.getPayload();
         }
-        return (String) response.getPayload();
+
+        throw new RuntimeException("Returned non 201 response code[" +response.getStatusCode()+ "] " +
+                "with a phrase '" + response.getReasonPhrase()+ "'on persistence");
     }
 
     @Override
