@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @Component
@@ -52,6 +53,14 @@ public class ResourceServiceImpl implements ResourceService {
 
         if(isVerified != null) {
             must.add(new Pair("verified", true));
+        }
+
+        if(Objects.isNull(offset)){
+            offset = 0;
+        }
+
+        if(Objects.isNull(rows)){
+            rows = 10;
         }
 
         List<ResourceModel> resourceModels = resourceDao.searchByLatest(must, new ArrayList<Pair>(), offset,

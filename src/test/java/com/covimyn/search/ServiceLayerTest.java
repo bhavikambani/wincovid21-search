@@ -58,7 +58,7 @@ public class ServiceLayerTest {
         }
     }*/
 
-    private static void testUpsert() throws IOException {
+    /*private static void testUpsert() throws IOException {
         ResourceDao resourceDao = new ResourceDaoImpl(esIndex, httpHelper, esQueryBuilder, jsonParser);
         ResourceService resourceService = new ResourceServiceImpl(resourceDao);
 
@@ -85,6 +85,6 @@ public class ServiceLayerTest {
         resourceService.upsert(resourceRequest);
         System.out.println("DONE");
 
-    }
+    }*/
 
 }

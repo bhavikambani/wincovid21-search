@@ -13,10 +13,10 @@ public class CovimynSearchApplication {
         SpringApplication.run(CovimynSearchApplication.class, args);
     }
 
-    @Bean(name = "esResourceEndPoint")
-    public String getEsResourceEndPoint() {
-        return "http://localhost:9200/resource_alias";
-    }
+//    @Bean(name = "esResourceEndPoint")
+//    public String getEsResourceEndPoint() {
+//        return "http://localhost:9200/resource_alias";
+//    }
 
     @Bean(name ="jsonParser")
     public JSONParser getJSONParser(){

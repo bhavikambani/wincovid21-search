@@ -3,8 +3,10 @@ package com.covimyn.search.controller;
 import com.covimyn.search.interfaces.ResourceRequest;
 import com.covimyn.search.interfaces.ResourceResponse;
 import com.covimyn.search.services.ResourceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.DefaultValue;
+import javax.ws.rs.DefaultValue;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,8 @@ import java.util.List;
 @RestController
 public class ResourceController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ResourceController.class);
+
     @Autowired
     ResourceService resourceService;
 
@@ -32,12 +36,13 @@ public class ResourceController {
                                          @QueryParam("city") String city,
                                          @QueryParam("resourceType") String resourceType,
                                          @QueryParam("isVerified") String isVerified,
-                                         @DefaultValue("0") @QueryParam("offset") int offset,
-                                         @DefaultValue("10") @QueryParam("rows") int rows,
+                                         @DefaultValue("0") @QueryParam("offset") Integer offset,
+                                         @DefaultValue("10") @QueryParam("rows") Integer rows,
                                          @DefaultValue("ASC") @QueryParam("sortOrder") String sortOrder
     ){
 
         try {
+            logger.debug("***Logging search call ***");
             List<ResourceResponse> resourceResponseList = resourceService.search(id, state, city, resourceType, isVerified, offset, rows, sortOrder);
             return new ResponseEntity(resourceResponseList,HttpStatus.OK);
         } catch (Exception e) {
