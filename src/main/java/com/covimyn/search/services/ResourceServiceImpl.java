@@ -16,8 +16,10 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Component
@@ -32,9 +34,9 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public List<ResourceResponse> search(String id, String state, String city, String resourceType, String isVerified,
-                           Integer offset, Integer rows, String sortOrder) throws Exception{
-        List<ResourceResponse> resourceResponses = new ArrayList<>();
+    public List<ResourceResponse> search(String id, String state, String city, String category,String subcategory ,String isVerified,
+                                         Integer offset, Integer rows, String sortOrder) throws Exception{
+        List<ResourceResponse> resourceResponses;
         List<Pair> must = new ArrayList<>();
         if(id != null) {
             must.add(new Pair(Constant.ID, id));
@@ -48,8 +50,12 @@ public class ResourceServiceImpl implements ResourceService {
             must.add(new Pair(Constant.CITY, city));
         }
 
-        if(resourceType != null) {
-            must.add(new Pair(Constant.RESOURCE_TYPE, resourceType));
+        if(category != null) {
+            must.add(new Pair(Constant.CATEGORY, category));
+        }
+
+        if(!Objects.isNull(subcategory)){
+            must.add(new Pair(Constant.SUBCATEGORY, subcategory));
         }
 
         if(isVerified != null) {
@@ -67,9 +73,12 @@ public class ResourceServiceImpl implements ResourceService {
         List<ResourceModel> resourceModels = resourceDao.searchByLatest(must, new ArrayList<Pair>(), offset,
                 rows);
 
-        for(ResourceModel resourceModel : resourceModels) {
-                       resourceResponses.add(transformResourceModelToResourceResponse(resourceModel));
-        }
+        List<ResourceModel> verifiedResults = resourceModels.stream().filter(ResourceModel::isVerified).collect(Collectors.toList());
+        List<ResourceModel> unVerifiedResults = resourceModels.stream().filter(resourceModel -> !resourceModel.isVerified()).collect(Collectors.toList());
+
+        // add first verified and then unverified results in response
+        resourceResponses = verifiedResults.stream().map(this::transformResourceModelToResourceResponse).collect(Collectors.toList());
+        unVerifiedResults.stream().map(this::transformResourceModelToResourceResponse).forEach(resourceResponses::add);
 
         return resourceResponses;
     }
@@ -84,7 +93,7 @@ public class ResourceServiceImpl implements ResourceService {
         resourceModel.setId(resourceRequest.getId());
         resourceModel.setName(resourceRequest.getName());
         resourceModel.setCategory(resourceRequest.getCategory());
-        resourceModel.setResourceType(resourceRequest.getResourceType());
+        resourceModel.setSubcategory(resourceRequest.getSubcategory());
         resourceModel.setAddress(resourceRequest.getAddress());
         resourceModel.setPincode(resourceRequest.getPincode());
         resourceModel.setDescription(resourceRequest.getDescription());
@@ -94,7 +103,6 @@ public class ResourceServiceImpl implements ResourceService {
         resourceModel.setCity(resourceRequest.getCity());
         resourceModel.setState(resourceRequest.getState());
         resourceModel.setAvailable(resourceRequest.isAvailable());
-        resourceModel.setPrice(resourceRequest.getPrice());
         resourceModel.setCreatedBy(resourceRequest.getCreatedBy());
         resourceModel.setCreatedAt(resourceRequest.getCreatedAt());
         resourceModel.setUpdatedBy(resourceRequest.getUpdatedBy());
@@ -108,7 +116,7 @@ public class ResourceServiceImpl implements ResourceService {
         resourceResponse.setId(resourceModel.getId());
         resourceResponse.setName(resourceModel.getName());
         resourceResponse.setCategory(resourceModel.getCategory());
-        resourceResponse.setResourceType(resourceModel.getResourceType());
+        resourceResponse.setSubcategory(resourceModel.getSubcategory());
         resourceResponse.setAddress(resourceModel.getAddress());
         resourceResponse.setPincode(resourceModel.getPincode());
         resourceResponse.setDescription(resourceModel.getDescription());
@@ -118,7 +126,6 @@ public class ResourceServiceImpl implements ResourceService {
         resourceResponse.setCity(resourceModel.getCity());
         resourceResponse.setState(resourceModel.getState());
         resourceResponse.setAvailable(resourceModel.isAvailable());
-        resourceResponse.setPrice(resourceModel.getPrice());
         resourceResponse.setCreatedBy(resourceModel.getCreatedBy());
         resourceResponse.setCreatedAt(resourceModel.getCreatedAt());
         resourceResponse.setUpdatedBy(resourceModel.getUpdatedBy());

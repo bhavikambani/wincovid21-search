@@ -34,14 +34,15 @@ public class ResourceController {
     public ResponseEntity search(@QueryParam("id") String id,
                                          @QueryParam("state") String state,
                                          @QueryParam("city") String city,
-                                         @QueryParam("resourceType") String resourceType,
+                                         @QueryParam("category") String category,
+                                         @QueryParam("subcategory") String subcategory,
                                          @QueryParam("isVerified") String isVerified,
                                          @DefaultValue("0") @QueryParam("offset") Integer offset,
                                          @DefaultValue("10") @QueryParam("rows") Integer rows,
                                          @DefaultValue("ASC") @QueryParam("sortOrder") String sortOrder
     ){
         try {
-            List<ResourceResponse> resourceResponseList = resourceService.search(id, state, city, resourceType, isVerified, offset, rows, sortOrder);
+            List<ResourceResponse> resourceResponseList = resourceService.search(id, state, city, category,subcategory, isVerified, offset, rows, sortOrder);
             return new ResponseEntity(ResourceEntryResponse.of(resourceResponseList),HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(ResourceEntryResponse.errorResponseOfException(),HttpStatus.INTERNAL_SERVER_ERROR);

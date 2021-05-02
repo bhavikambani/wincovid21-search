@@ -22,18 +22,19 @@ public class ResourceModel {
     @NonNull
     private String name;
 
+    @NonNull
     private String category;
 
     @NonNull
-    private String resourceType;
+    private String subcategory;
 
     private String address;
 
-    @NonNull
     private String pincode;
 
     private String description;
 
+    @NonNull
     private String phone1;
 
     private String phone2;
@@ -48,8 +49,6 @@ public class ResourceModel {
 
     @NonNull
     private boolean isAvailable;
-
-    private double price;
 
     private String createdBy;
 
