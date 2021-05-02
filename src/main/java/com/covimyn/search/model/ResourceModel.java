@@ -20,10 +20,10 @@ public class ResourceModel {
     private String name;
 
     @NonNull
-    private String category;
+    private long category;
 
     @NonNull
-    private String subcategory;
+    private long subcategory;
 
     private String address;
 
@@ -39,10 +39,10 @@ public class ResourceModel {
     private String email;
 
     @NonNull
-    private String city;
+    private long city;
 
     @NonNull
-    private String state;
+    private long state;
 
     @NonNull
     private boolean isAvailable;
