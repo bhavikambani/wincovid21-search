@@ -99,7 +99,9 @@ public class ResourceServiceImpl implements ResourceService {
         resourceModel.setId(resourceRequest.getId());
         resourceModel.setName(resourceRequest.getName());
         resourceModel.setCategory(resourceRequest.getCategory());
+        resourceModel.setCategoryId(resourceRequest.getCategoryId());
         resourceModel.setSubcategory(resourceRequest.getSubcategory());
+        resourceModel.setSubcategoryId(resourceRequest.getSubcategoryId());
         resourceModel.setAddress(resourceRequest.getAddress());
         resourceModel.setPincode(resourceRequest.getPincode());
         resourceModel.setDescription(resourceRequest.getDescription());
@@ -107,7 +109,9 @@ public class ResourceServiceImpl implements ResourceService {
         resourceModel.setPhone2(resourceRequest.getPhone2());
         resourceModel.setEmail(resourceRequest.getEmail());
         resourceModel.setCity(resourceRequest.getCity());
+        resourceModel.setCityId(resourceRequest.getCityId());
         resourceModel.setState(resourceRequest.getState());
+        resourceModel.setStateId(resourceRequest.getStateId());
         resourceModel.setAvailable(resourceRequest.isAvailable());
         resourceModel.setCreatedBy(resourceRequest.getCreatedBy());
         resourceModel.setCreatedAt(resourceRequest.getCreatedAt());
@@ -122,7 +126,9 @@ public class ResourceServiceImpl implements ResourceService {
         resourceResponse.setId(resourceModel.getId());
         resourceResponse.setName(resourceModel.getName());
         resourceResponse.setCategory(resourceModel.getCategory());
+        resourceResponse.setCategoryId(resourceModel.getCategoryId());
         resourceResponse.setSubcategory(resourceModel.getSubcategory());
+        resourceResponse.setSubcategoryId(resourceModel.getSubcategoryId());
         resourceResponse.setAddress(resourceModel.getAddress());
         resourceResponse.setPincode(resourceModel.getPincode());
         resourceResponse.setDescription(resourceModel.getDescription());
@@ -130,7 +136,9 @@ public class ResourceServiceImpl implements ResourceService {
         resourceResponse.setPhone2(resourceModel.getPhone2());
         resourceResponse.setEmail(resourceModel.getEmail());
         resourceResponse.setCity(resourceModel.getCity());
+        resourceResponse.setCityId(resourceModel.getCityId());
         resourceResponse.setState(resourceModel.getState());
+        resourceResponse.setStateId(resourceModel.getStateId());
         resourceResponse.setAvailable(resourceModel.isAvailable());
         resourceResponse.setCreatedBy(resourceModel.getCreatedBy());
         resourceResponse.setCreatedAt(resourceModel.getCreatedAt());
