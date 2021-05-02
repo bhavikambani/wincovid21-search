@@ -18,7 +18,7 @@
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
                 <fileNamePattern>logs/archived/app.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <!-- each archived file, size max 10MB -->
-                <maxFileSize>20MB</maxFileSize>
+                <maxFileSize>10MB</maxFileSize>
                 <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
                 <totalSizeCap>20GB</totalSizeCap>
                 <!-- 60 days to keep -->
@@ -32,7 +32,7 @@
 
         <logger name="org.springframework" level="INFO"/>
         <logger name="com.mynsearch" level="INFO"/>
-        <root level="ERROR">
+        <root level="INFO">
             <appender-ref ref="FILE-ROLLING"/>
         </root>
     </springProfile>

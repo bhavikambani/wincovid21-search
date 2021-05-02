@@ -4,6 +4,7 @@
 
 package com.covimyn.search.dao;
 
+import com.covimyn.search.controller.ResourceController;
 import com.covimyn.search.model.ResourceModel;
 import com.covimyn.search.pojo.ApiHelperResponse;
 import com.covimyn.search.pojo.Pair;
@@ -16,6 +17,8 @@ import org.apache.http.HttpStatus;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -29,8 +32,9 @@ import java.util.List;
 @Setter
 @Component
 public class ResourceDaoImpl implements ResourceDao {
+    private static final Logger logger = LoggerFactory.getLogger(ResourceDaoImpl.class);
 
-    @Value("${project.endpoint}")
+    @Value("${alias.endpoint}")
     private String esResourceEndPoint;
     @Autowired
     private HttpHelper httpHelper;
@@ -96,7 +100,7 @@ public class ResourceDaoImpl implements ResourceDao {
         resourceModel.setId((String) jsonObject.get(Constant.ID));
         resourceModel.setName((String)jsonObject.get(Constant.NAME));
         resourceModel.setCategory((String)jsonObject.get(Constant.CATEGORY));
-        resourceModel.setResourceType((String) jsonObject.get(Constant.RESOURCE_TYPE));
+        resourceModel.setSubcategory((String) jsonObject.get(Constant.SUBCATEGORY));
         resourceModel.setAddress((String) jsonObject.get(Constant.ADDRESS));
         resourceModel.setPincode((String) jsonObject.get(Constant.PINCODE));
         resourceModel.setDescription((String) jsonObject.get(Constant.DESCRIPTION));
@@ -106,7 +110,6 @@ public class ResourceDaoImpl implements ResourceDao {
         resourceModel.setCity((String) jsonObject.get(Constant.CITY));
         resourceModel.setState((String) jsonObject.get(Constant.STATE));
         resourceModel.setAvailable((boolean) jsonObject.get(Constant.AVAILABLE));
-        resourceModel.setPrice((double) jsonObject.get(Constant.PRICE));
         resourceModel.setCreatedBy((String) jsonObject.get(Constant.CREATED_BY));
         resourceModel.setCreatedAt((String) jsonObject.get(Constant.CREATED_AT));
         resourceModel.setUpdatedBy((String) jsonObject.get(Constant.UPDATED_BY));

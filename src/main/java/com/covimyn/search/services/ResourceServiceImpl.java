@@ -4,6 +4,7 @@
 
 package com.covimyn.search.services;
 
+import com.covimyn.search.controller.ResourceController;
 import com.covimyn.search.dao.ResourceDao;
 import com.covimyn.search.interfaces.ResourceRequest;
 import com.covimyn.search.interfaces.ResourceResponse;
@@ -11,6 +12,8 @@ import com.covimyn.search.model.ResourceModel;
 import com.covimyn.search.pojo.Pair;
 import com.covimyn.search.utility.Constant;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Component
 public class ResourceServiceImpl implements ResourceService {
+    private static final Logger logger = LoggerFactory.getLogger(ResourceServiceImpl.class);
 
     private ResourceDao resourceDao;
 
@@ -70,6 +74,7 @@ public class ResourceServiceImpl implements ResourceService {
             rows = 10;
         }
 
+
         List<ResourceModel> resourceModels = resourceDao.searchByLatest(must, new ArrayList<Pair>(), offset,
                 rows);
 
@@ -79,7 +84,7 @@ public class ResourceServiceImpl implements ResourceService {
         // add first verified and then unverified results in response
         resourceResponses = verifiedResults.stream().map(this::transformResourceModelToResourceResponse).collect(Collectors.toList());
         unVerifiedResults.stream().map(this::transformResourceModelToResourceResponse).forEach(resourceResponses::add);
-
+        logger.info("Returned result size= "+resourceResponses.size());
         return resourceResponses;
     }
 
