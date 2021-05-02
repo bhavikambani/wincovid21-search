@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class EsQueryBuilder {
 
-    public JSONObject generateSearchQuery(List<Pair> mustParams, List<Pair> shouldParams, int page, int size) {
+    public JSONObject generateSearchQuery(List<Pair> mustParams, List<Pair> shouldParams) {
         JSONObject payload = new JSONObject();
 
         JSONObject bool = new JSONObject();
@@ -52,9 +52,13 @@ public class EsQueryBuilder {
         bool.put("bool", boolValue);
         payload.put("query", bool);
 
+        return payload;
+    }
+
+    public JSONObject generateSearchQueryWithPageAndSize(List<Pair> mustParams, List<Pair> shouldParams, int page, int size) {
+        JSONObject payload = generateSearchQuery(mustParams, shouldParams);
         payload.put("from", page);
         payload.put("size", size);
-
         return payload;
     }
 
@@ -63,7 +67,7 @@ public class EsQueryBuilder {
                                                   Pair sortParam) {
         JSONObject sort = new JSONObject();
         sort.put(sortParam.getKey(), sortParam.getValue());
-        JSONObject payload = generateSearchQuery(mustParams, shouldParams, page, size);
+        JSONObject payload = generateSearchQueryWithPageAndSize(mustParams, shouldParams, page, size);
         payload.put("sort", sort);
         return payload;
     }

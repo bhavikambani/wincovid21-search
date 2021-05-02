@@ -54,7 +54,7 @@ public class ResourceDaoImpl implements ResourceDao {
 
     @Override
     public List<ResourceModel> search(List<Pair> must, List<Pair> should, int page, int size) throws Exception {
-        JSONObject esSearchQuery = esQueryBuilder.generateSearchQuery(must, should, page, size);
+        JSONObject esSearchQuery = esQueryBuilder.generateSearchQueryWithPageAndSize(must, should, page, size);
         ApiHelperResponse response = httpHelper.makeHttpPostRequest(esResourceEndPoint + "/_search", esSearchQuery);
         if(response.getStatusCode() != HttpStatus.SC_OK) {
             throw new RuntimeException("Returned non 200 response code on persistence");
@@ -75,6 +75,14 @@ public class ResourceDaoImpl implements ResourceDao {
         }
         JSONObject jsonResponseObject = (JSONObject)jsonParser.parse(response.getPayload().toString());
         return getResourceModelsFromEsResponse(jsonResponseObject);
+    }
+
+    @Override
+    public int count(List<Pair> must, List<Pair> should) throws Exception {
+        JSONObject esSearchQuery = esQueryBuilder.generateSearchQuery(must, should);
+        ApiHelperResponse response = httpHelper.makeHttpPostRequest(esResourceEndPoint + "/_count", esSearchQuery);
+        JSONObject jsonResponseObject = (JSONObject)jsonParser.parse(response.getPayload().toString());
+        return jsonResponseObject.containsKey("count") ? (Integer) jsonResponseObject.get("count") : 0;
     }
 
 
