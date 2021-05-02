@@ -6,6 +6,7 @@ package com.covimyn.search.services;
 
 import com.covimyn.search.controller.ResourceController;
 import com.covimyn.search.dao.ResourceDao;
+import com.covimyn.search.interfaces.ResourceEntryResponse;
 import com.covimyn.search.interfaces.ResourceRequest;
 import com.covimyn.search.interfaces.ResourceResponse;
 import com.covimyn.search.model.ResourceModel;
@@ -32,52 +33,51 @@ public class ResourceServiceImpl implements ResourceService {
     private ResourceDao resourceDao;
 
     @Override
-    public String upsert (ResourceRequest resourceRequest) throws IOException  {
+    public String upsert(ResourceRequest resourceRequest) throws IOException {
         ResourceModel resourceModel = transformResourceRequestToResourceModel(resourceRequest);
-        logger.info("Insert into ES request object:"+ resourceModel);
+        logger.info("Insert into ES request object:" + resourceModel);
         return resourceDao.upsert(resourceModel);
     }
 
     @Override
-    public List<ResourceResponse> search(String id, Long stateId, Long cityId, Long categoryId,Long subcategoryId ,String isVerified,
-                                         Integer offset, Integer rows, String sortOrder) throws Exception{
+    public ResourceEntryResponse search(String id, Long stateId, Long cityId, Long categoryId, Long subcategoryId, String isVerified,
+                                        Integer offset, Integer rows, String sortOrder) throws Exception {
         List<ResourceResponse> resourceResponses;
         List<Pair> must = new ArrayList<>();
-        if(id != null) {
+        if (id != null) {
             must.add(new Pair(Constant.ID, id));
         }
 
-        if(!Objects.isNull(stateId)) {
+        if (!Objects.isNull(stateId)) {
             must.add(new Pair(Constant.STATEID, stateId));
         }
 
-        if(cityId != null) {
+        if (cityId != null) {
             must.add(new Pair(Constant.CITYID, cityId));
         }
 
-        if(categoryId != null) {
+        if (categoryId != null) {
             must.add(new Pair(Constant.CATEGORYID, categoryId));
         }
 
-        if(!Objects.isNull(subcategoryId)){
+        if (!Objects.isNull(subcategoryId)) {
             must.add(new Pair(Constant.SUBCATEGORYID, subcategoryId));
         }
 
-        if(isVerified != null) {
+        if (isVerified != null) {
             must.add(new Pair(Constant.VERIFIED, Boolean.parseBoolean(isVerified)));
         }
 
-        if(Objects.isNull(offset)){
+        if (Objects.isNull(offset)) {
             offset = 0;
         }
 
-        if(Objects.isNull(rows)){
+        if (Objects.isNull(rows)) {
             rows = 10;
         }
 
-
-        List<ResourceModel> resourceModels = resourceDao.searchByLatest(must, new ArrayList<Pair>(), offset,
-                rows);
+        List<ResourceModel> resourceModels = resourceDao.searchByLatest(must, new ArrayList<Pair>(), offset, rows);
+        long count = resourceDao.count(must, new ArrayList<Pair>());
 
         List<ResourceModel> verifiedResults = resourceModels.stream().filter(ResourceModel::isVerified).collect(Collectors.toList());
         List<ResourceModel> unVerifiedResults = resourceModels.stream().filter(resourceModel -> !resourceModel.isVerified()).collect(Collectors.toList());
@@ -85,12 +85,15 @@ public class ResourceServiceImpl implements ResourceService {
         // add first verified and then unverified results in response
         resourceResponses = verifiedResults.stream().map(this::transformResourceModelToResourceResponse).collect(Collectors.toList());
         unVerifiedResults.stream().map(this::transformResourceModelToResourceResponse).forEach(resourceResponses::add);
-        logger.info("Returned result size= "+resourceResponses.size());
-        return resourceResponses;
+        logger.info("Returned result size= " + resourceResponses.size());
+
+        ResourceEntryResponse response = ResourceEntryResponse.of(resourceResponses, count);
+        return response;
     }
 
     /**
      * A transformation logic.
+     *
      * @param resourceRequest
      * @return
      */

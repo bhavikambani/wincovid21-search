@@ -4,6 +4,7 @@
 
 package com.covimyn.search.services;
 
+import com.covimyn.search.interfaces.ResourceEntryResponse;
 import com.covimyn.search.interfaces.ResourceRequest;
 import com.covimyn.search.interfaces.ResourceResponse;
 import com.covimyn.search.pojo.Pair;
@@ -17,5 +18,5 @@ import java.util.List;
 public interface ResourceService {
 
     String upsert (ResourceRequest resourceRequest) throws IOException;
-    List<ResourceResponse> search(String id, Long stateId, Long cityId, Long categoryId, Long subcategoryId,String isVerified, Integer offset, Integer rows, String sortOrder) throws Exception;
+    ResourceEntryResponse search(String id, Long stateId, Long cityId, Long categoryId, Long subcategoryId, String isVerified, Integer offset, Integer rows, String sortOrder) throws Exception;
 }

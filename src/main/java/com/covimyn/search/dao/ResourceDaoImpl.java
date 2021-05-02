@@ -78,11 +78,11 @@ public class ResourceDaoImpl implements ResourceDao {
     }
 
     @Override
-    public int count(List<Pair> must, List<Pair> should) throws Exception {
+    public long count(List<Pair> must, List<Pair> should) throws Exception {
         JSONObject esSearchQuery = esQueryBuilder.generateSearchQuery(must, should);
         ApiHelperResponse response = httpHelper.makeHttpPostRequest(esResourceEndPoint + "/_count", esSearchQuery);
         JSONObject jsonResponseObject = (JSONObject)jsonParser.parse(response.getPayload().toString());
-        return jsonResponseObject.containsKey("count") ? (Integer) jsonResponseObject.get("count") : 0;
+        return jsonResponseObject.containsKey("count") ? (Long) jsonResponseObject.get("count") : 0;
     }
 
 

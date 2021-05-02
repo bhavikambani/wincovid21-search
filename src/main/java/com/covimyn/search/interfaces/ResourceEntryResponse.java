@@ -8,9 +8,9 @@ import java.util.List;
 public class ResourceEntryResponse extends AbstractResponse {
         List<ResourceResponse> data;
 
-    public static ResourceEntryResponse of(List<ResourceResponse> responseEntries){
+    public static ResourceEntryResponse of(List<ResourceResponse> responseEntries, long count){
         ResourceEntryResponse response = new ResourceEntryResponse();
-        StatusResponse statusResponse = new StatusResponse(StatusResponse.Type.SUCCESS,responseEntries.size());
+        StatusResponse statusResponse = new StatusResponse(StatusResponse.Type.SUCCESS,count);
         response.setStatus(statusResponse);
         response.data = responseEntries;
         return response;

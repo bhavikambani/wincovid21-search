@@ -42,8 +42,7 @@ public class ResourceController {
                                          @DefaultValue("ASC") @QueryParam("sortOrder") String sortOrder
     ){
         try {
-            List<ResourceResponse> resourceResponseList = resourceService.search(id, stateId, cityId, categoryId,subcategoryId, isVerified, offset, rows, sortOrder);
-            ResourceEntryResponse response = ResourceEntryResponse.of(resourceResponseList);
+            ResourceEntryResponse response = resourceService.search(id, stateId, cityId, categoryId, subcategoryId, isVerified, offset, rows, sortOrder);
             logger.info("search api response: " +response );
             return new ResponseEntity(response,HttpStatus.OK);
         } catch (Exception e) {
