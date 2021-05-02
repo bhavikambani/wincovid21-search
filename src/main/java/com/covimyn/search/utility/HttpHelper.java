@@ -33,7 +33,7 @@ public class HttpHelper {
     public HttpHelper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         this.poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
-        poolingHttpClientConnectionManager.setMaxTotal(500);
+        poolingHttpClientConnectionManager.setMaxTotal(300);
         poolingHttpClientConnectionManager.setDefaultMaxPerRoute(100);
     }
 
@@ -55,11 +55,9 @@ public class HttpHelper {
                     response.getStatusLine().getReasonPhrase(),
                     EntityUtils.toString(response.getEntity()));
             return apiHelperResponse;
-        }
-        finally {
-            logger.info("Closing http connection");
-            httpPost.releaseConnection();
-            response.close();
+        } catch (Exception e) {
+            logger.error("Exception while executing HTTP call", e);
+            throw new IOException(e);
         }
     }
 }

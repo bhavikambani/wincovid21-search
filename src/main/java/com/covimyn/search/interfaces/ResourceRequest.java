@@ -19,10 +19,22 @@ public class ResourceRequest {
     private String name;
 
     @NonNull
-    private long category;
+    private String category;
 
     @NonNull
-    private long subcategory;
+    private String subcategory;
+
+    @NonNull
+    private String city;
+
+    @NonNull
+    private String state;
+
+    @NonNull
+    private long categoryId;
+
+    @NonNull
+    private long subcategoryId;
 
     private String address;
 
@@ -38,10 +50,10 @@ public class ResourceRequest {
     private String email;
 
     @NonNull
-    private long city;
+    private long cityId;
 
     @NonNull
-    private long state;
+    private long stateId;
 
     @NonNull
     private boolean isAvailable;

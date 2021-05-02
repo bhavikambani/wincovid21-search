@@ -12,7 +12,9 @@ public class Constant {
     public static final String ID = "id";
     public static final String NAME = "name";
     public static final String CATEGORY = "category";
+    public static final String CATEGORYID = "categoryId";
     public static final String SUBCATEGORY = "subcategory";
+    public static final String SUBCATEGORYID = "subcategoryId";
     public static final String ADDRESS = "address";
     public static final String PINCODE = "pincode";
     public static final String DESCRIPTION = "description";
@@ -20,7 +22,9 @@ public class Constant {
     public static final String PHONE2 = "phone2";
     public static final String EMAIL = "email";
     public static final String CITY = "city";
+    public static final String CITYID = "cityId";
     public static final String STATE = "state";
+    public static final String STATEID = "stateId";
     public static final String AVAILABLE = "available";
     public static final String CREATED_BY = "createdBy";
     public static final String CREATED_AT = "createdAt";

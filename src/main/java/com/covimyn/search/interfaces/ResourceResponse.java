@@ -23,10 +23,28 @@ public class ResourceResponse {
     private String name;
 
     @NonNull
-    private long category;
+    private String category;
 
     @NonNull
-    private long subcategory;
+    private String subcategory;
+
+    @NonNull
+    private String city;
+
+    @NonNull
+    private String state;
+
+    @NonNull
+    private long categoryId;
+
+    @NonNull
+    private long subcategoryId;
+
+    @NonNull
+    private long cityId;
+
+    @NonNull
+    private long stateId;
 
     private String address;
 
@@ -40,12 +58,6 @@ public class ResourceResponse {
     private String phone2;
 
     private String email;
-
-    @NonNull
-    private long city;
-
-    @NonNull
-    private long state;
 
     @NonNull
     private boolean isAvailable;
