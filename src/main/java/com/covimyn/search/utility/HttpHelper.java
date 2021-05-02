@@ -5,17 +5,15 @@
 package com.covimyn.search.utility;
 
 
-import com.covimyn.search.dao.ResourceDaoImpl;
 import com.covimyn.search.pojo.ApiHelperResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.Setter;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@AllArgsConstructor
 @Component
 public class HttpHelper {
 
@@ -31,11 +28,22 @@ public class HttpHelper {
 
     private ObjectMapper objectMapper;
 
+    private PoolingHttpClientConnectionManager poolingHttpClientConnectionManager;
+
+    public HttpHelper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+        this.poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
+        poolingHttpClientConnectionManager.setMaxTotal(500);
+        poolingHttpClientConnectionManager.setDefaultMaxPerRoute(100);
+    }
+
     public ApiHelperResponse makeHttpPostRequest(String url, Object payload) throws IOException {
         HttpPost httpPost = new HttpPost(url);
         CloseableHttpResponse response = null;
         try {
-            CloseableHttpClient client = HttpClients.createDefault();
+            CloseableHttpClient client = HttpClients.custom()
+                    .setConnectionManager(poolingHttpClientConnectionManager)
+                    .build();
 
             StringEntity entity = new StringEntity(objectMapper.writeValueAsString(payload));
             httpPost.setEntity(entity);
