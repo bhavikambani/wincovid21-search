@@ -34,6 +34,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public String upsert (ResourceRequest resourceRequest) throws IOException  {
         ResourceModel resourceModel = transformResourceRequestToResourceModel(resourceRequest);
+        logger.info("Insert into ES request object:"+ resourceModel);
         return resourceDao.upsert(resourceModel);
     }
 

@@ -4,14 +4,12 @@
 
 package com.covimyn.search.dao;
 
-import com.covimyn.search.controller.ResourceController;
 import com.covimyn.search.model.ResourceModel;
 import com.covimyn.search.pojo.ApiHelperResponse;
 import com.covimyn.search.pojo.Pair;
 import com.covimyn.search.utility.Constant;
 import com.covimyn.search.utility.EsQueryBuilder;
 import com.covimyn.search.utility.HttpHelper;
-import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.apache.http.HttpStatus;
 import org.json.simple.JSONArray;
@@ -21,8 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -47,6 +43,7 @@ public class ResourceDaoImpl implements ResourceDao {
     public String upsert(ResourceModel resourceModel) throws IOException {
         ApiHelperResponse response = httpHelper.makeHttpPostRequest(esResourceEndPoint + "/" +
                 Constant.ES_RESOURCE_INDEX_TYPE + "/" + resourceModel.getId(), resourceModel);
+        logger.info("ES upsert response= "+response);
         if(response.getStatusCode() == HttpStatus.SC_CREATED || response.getStatusCode() == HttpStatus.SC_OK)  {
             return (String) response.getPayload();
         }
@@ -70,7 +67,9 @@ public class ResourceDaoImpl implements ResourceDao {
     public List<ResourceModel> searchByLatest(List<Pair> must, List<Pair> should, int page, int size) throws Exception {
         Pair sortBy = new Pair(Constant.UPDATED_AT, "desc");
         JSONObject esSearchQuery = esQueryBuilder.generateSearchQueryWithSort(must, should, page, size, sortBy);
+        logger.info("Elastic search query= "+esSearchQuery.toString());
         ApiHelperResponse response = httpHelper.makeHttpPostRequest(esResourceEndPoint + "/_search", esSearchQuery);
+        logger.info("Elastic search response= "+response.toString());
         if(response.getStatusCode() != HttpStatus.SC_OK) {
             throw new RuntimeException("Returned non 200 response code on persistence");
         }

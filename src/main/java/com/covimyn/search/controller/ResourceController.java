@@ -43,8 +43,11 @@ public class ResourceController {
     ){
         try {
             List<ResourceResponse> resourceResponseList = resourceService.search(id, state, city, category,subcategory, isVerified, offset, rows, sortOrder);
-            return new ResponseEntity(ResourceEntryResponse.of(resourceResponseList),HttpStatus.OK);
+            ResourceEntryResponse response = ResourceEntryResponse.of(resourceResponseList);
+            logger.info("search api response: " +response );
+            return new ResponseEntity(response,HttpStatus.OK);
         } catch (Exception e) {
+            logger.error("Exception in search request:",e);
             return new ResponseEntity(ResourceEntryResponse.errorResponseOfException(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -53,9 +56,10 @@ public class ResourceController {
     public ResponseEntity addResourceRecord(@RequestBody ResourceRequest resourceRequest) {
         try {
             String upsertResponse = resourceService.upsert(resourceRequest);
-            System.out.println(upsertResponse);
+            logger.info("upsert API response= "+upsertResponse);
             return new ResponseEntity(HttpStatus.OK);
         } catch (IOException e) {
+            logger.error("Exception in upsert request:",e);
             return new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
