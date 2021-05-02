@@ -11,21 +11,21 @@ public class Constant {
     //ES INDEX KEYS
     public static final String ID = "id";
     public static final String NAME = "name";
-    public static final String COMMENT = "comment";
+    public static final String CATEGORY = "category";
+    public static final String RESOURCE_TYPE = "resourceType";
     public static final String ADDRESS = "address";
-    public static final String DISTRICT = "district";
-    public static final String EMAIL = "email";
     public static final String PINCODE = "pincode";
+    public static final String DESCRIPTION = "description";
+    public static final String PHONE1 = "phone1";
+    public static final String PHONE2 = "phone2";
+    public static final String EMAIL = "email";
     public static final String CITY = "city";
     public static final String STATE = "state";
-    public static final String PHONE = "phone";
-    public static final String LOCATION = "location";
-    public static final String VERIFIED = "verified";
-    public static final String RESOURCE_TYPE = "resourceType";
     public static final String AVAILABLE = "available";
-    public static final String FEEDBACK = "feedback";
+    public static final String PRICE = "price";
     public static final String CREATED_BY = "createdBy";
-    public static final String UPDATED_BY = "updatedBy";
     public static final String CREATED_AT = "createdAt";
+    public static final String UPDATED_BY = "updatedBy";
     public static final String UPDATED_AT = "updatedAt";
+    public static final String VERIFIED = "verified";
 }

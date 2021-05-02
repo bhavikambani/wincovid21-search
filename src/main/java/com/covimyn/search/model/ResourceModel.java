@@ -22,16 +22,23 @@ public class ResourceModel {
     @NonNull
     private String name;
 
-    private String comment;
+    private String category;
+
+    @NonNull
+    private String resourceType;
 
     private String address;
 
-    private String district;
-
-    private String email;
-
     @NonNull
     private String pincode;
+
+    private String description;
+
+    private String phone1;
+
+    private String phone2;
+
+    private String email;
 
     @NonNull
     private String city;
@@ -39,28 +46,20 @@ public class ResourceModel {
     @NonNull
     private String state;
 
-    private String phone;
-
-    private String location;
-
-    @NonNull
-    private boolean isVerified;
-
-    @NonNull
-    private String resourceType;
-
     @NonNull
     private boolean isAvailable;
 
-    private String feedback;
+    private double price;
 
     private String createdBy;
 
-    private String updatedBy;
-
     private String createdAt;
+
+    private String updatedBy;
 
     @NonNull
     private String updatedAt;
 
+    @NonNull
+    private boolean isVerified;
 }

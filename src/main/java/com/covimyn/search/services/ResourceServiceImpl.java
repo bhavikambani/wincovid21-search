@@ -9,6 +9,7 @@ import com.covimyn.search.interfaces.ResourceRequest;
 import com.covimyn.search.interfaces.ResourceResponse;
 import com.covimyn.search.model.ResourceModel;
 import com.covimyn.search.pojo.Pair;
+import com.covimyn.search.utility.Constant;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -36,23 +37,23 @@ public class ResourceServiceImpl implements ResourceService {
         List<ResourceResponse> resourceResponses = new ArrayList<>();
         List<Pair> must = new ArrayList<>();
         if(id != null) {
-            must.add(new Pair("id", id));
+            must.add(new Pair(Constant.ID, id));
         }
 
         if(state != null) {
-            must.add(new Pair("state", state));
+            must.add(new Pair(Constant.STATE, state));
         }
 
         if(city != null) {
-            must.add(new Pair("city", city));
+            must.add(new Pair(Constant.CITY, city));
         }
 
         if(resourceType != null) {
-            must.add(new Pair("resourceType", resourceType));
+            must.add(new Pair(Constant.RESOURCE_TYPE, resourceType));
         }
 
         if(isVerified != null) {
-            must.add(new Pair("verified", true));
+            must.add(new Pair(Constant.VERIFIED, Boolean.parseBoolean(isVerified)));
         }
 
         if(Objects.isNull(offset)){
@@ -80,27 +81,25 @@ public class ResourceServiceImpl implements ResourceService {
      */
     private ResourceModel transformResourceRequestToResourceModel(ResourceRequest resourceRequest) {
         ResourceModel resourceModel = new ResourceModel();
-        String resourceId = resourceRequest.getId() + "_" + resourceRequest.getResourceType();
-        resourceId = resourceId.replaceAll("[^a-zA-Z0-9]+", "");
-        resourceModel.setId(resourceId);
+        resourceModel.setId(resourceRequest.getId());
         resourceModel.setName(resourceRequest.getName());
-        resourceModel.setComment(resourceRequest.getComment());
+        resourceModel.setCategory(resourceRequest.getCategory());
+        resourceModel.setResourceType(resourceRequest.getResourceType());
         resourceModel.setAddress(resourceRequest.getAddress());
-        resourceModel.setDistrict(resourceRequest.getDistrict());
-        resourceModel.setEmail(resourceRequest.getEmail());
         resourceModel.setPincode(resourceRequest.getPincode());
+        resourceModel.setDescription(resourceRequest.getDescription());
+        resourceModel.setPhone1(resourceRequest.getPhone1());
+        resourceModel.setPhone2(resourceRequest.getPhone2());
+        resourceModel.setEmail(resourceRequest.getEmail());
         resourceModel.setCity(resourceRequest.getCity());
         resourceModel.setState(resourceRequest.getState());
-        resourceModel.setPhone(resourceRequest.getPhone());
-        resourceModel.setLocation(resourceRequest.getLocation());
-        resourceModel.setVerified(resourceRequest.isVerified());
-        resourceModel.setCreatedAt(resourceRequest.getCreatedAt());
-        resourceModel.setCreatedBy(resourceRequest.getCreatedBy());
-        resourceModel.setUpdatedAt(resourceRequest.getUpdatedAt());
-        resourceModel.setUpdatedBy(resourceRequest.getUpdatedBy());
-        resourceModel.setResourceType(resourceRequest.getResourceType());
         resourceModel.setAvailable(resourceRequest.isAvailable());
-        resourceModel.setFeedback(resourceRequest.getFeedback());
+        resourceModel.setPrice(resourceRequest.getPrice());
+        resourceModel.setCreatedBy(resourceRequest.getCreatedBy());
+        resourceModel.setCreatedAt(resourceRequest.getCreatedAt());
+        resourceModel.setUpdatedBy(resourceRequest.getUpdatedBy());
+        resourceModel.setUpdatedAt(resourceRequest.getUpdatedAt());
+        resourceModel.setVerified(resourceRequest.isVerified());
         return resourceModel;
     }
 
@@ -108,23 +107,23 @@ public class ResourceServiceImpl implements ResourceService {
         ResourceResponse resourceResponse = new ResourceResponse();
         resourceResponse.setId(resourceModel.getId());
         resourceResponse.setName(resourceModel.getName());
-        resourceResponse.setComment(resourceModel.getComment());
+        resourceResponse.setCategory(resourceModel.getCategory());
+        resourceResponse.setResourceType(resourceModel.getResourceType());
         resourceResponse.setAddress(resourceModel.getAddress());
-        resourceResponse.setDistrict(resourceModel.getDistrict());
-        resourceResponse.setEmail(resourceModel.getEmail());
         resourceResponse.setPincode(resourceModel.getPincode());
+        resourceResponse.setDescription(resourceModel.getDescription());
+        resourceResponse.setPhone1(resourceModel.getPhone1());
+        resourceResponse.setPhone2(resourceModel.getPhone2());
+        resourceResponse.setEmail(resourceModel.getEmail());
         resourceResponse.setCity(resourceModel.getCity());
         resourceResponse.setState(resourceModel.getState());
-        resourceResponse.setPhone(resourceModel.getPhone());
-        resourceResponse.setLocation(resourceModel.getLocation());
-        resourceResponse.setVerified(resourceModel.isVerified());
-        resourceResponse.setResourceType(resourceModel.getResourceType());
         resourceResponse.setAvailable(resourceModel.isAvailable());
-        resourceResponse.setFeedback(resourceModel.getFeedback());
+        resourceResponse.setPrice(resourceModel.getPrice());
+        resourceResponse.setCreatedBy(resourceModel.getCreatedBy());
         resourceResponse.setCreatedAt(resourceModel.getCreatedAt());
-        resourceResponse.setCreatedBy(resourceModel.getCreatedBy());
+        resourceResponse.setUpdatedBy(resourceModel.getUpdatedBy());
         resourceResponse.setUpdatedAt(resourceModel.getUpdatedAt());
-        resourceResponse.setCreatedBy(resourceModel.getCreatedBy());
+        resourceResponse.setVerified(resourceModel.isVerified());
         return resourceResponse;
     }
 

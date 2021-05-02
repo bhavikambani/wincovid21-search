@@ -95,23 +95,23 @@ public class ResourceDaoImpl implements ResourceDao {
         ResourceModel resourceModel = new ResourceModel();
         resourceModel.setId((String) jsonObject.get(Constant.ID));
         resourceModel.setName((String)jsonObject.get(Constant.NAME));
-        resourceModel.setComment((String) jsonObject.get(Constant.COMMENT));
+        resourceModel.setCategory((String)jsonObject.get(Constant.CATEGORY));
+        resourceModel.setResourceType((String) jsonObject.get(Constant.RESOURCE_TYPE));
         resourceModel.setAddress((String) jsonObject.get(Constant.ADDRESS));
-        resourceModel.setDistrict((String) jsonObject.get(Constant.DISTRICT));
-        resourceModel.setEmail((String) jsonObject.get(Constant.EMAIL));
         resourceModel.setPincode((String) jsonObject.get(Constant.PINCODE));
+        resourceModel.setDescription((String) jsonObject.get(Constant.DESCRIPTION));
+        resourceModel.setPhone1((String) jsonObject.get(Constant.PHONE1));
+        resourceModel.setPhone2((String) jsonObject.get(Constant.PHONE2));
+        resourceModel.setEmail((String) jsonObject.get(Constant.EMAIL));
         resourceModel.setCity((String) jsonObject.get(Constant.CITY));
         resourceModel.setState((String) jsonObject.get(Constant.STATE));
-        resourceModel.setPhone((String) jsonObject.get(Constant.PHONE));
-        resourceModel.setLocation((String) jsonObject.get(Constant.LOCATION));
-        resourceModel.setVerified((boolean) jsonObject.get(Constant.VERIFIED));
-        resourceModel.setResourceType((String) jsonObject.get(Constant.RESOURCE_TYPE));
         resourceModel.setAvailable((boolean) jsonObject.get(Constant.AVAILABLE));
-        resourceModel.setCreatedAt((String) jsonObject.get(Constant.CREATED_AT));
+        resourceModel.setPrice((double) jsonObject.get(Constant.PRICE));
         resourceModel.setCreatedBy((String) jsonObject.get(Constant.CREATED_BY));
-        resourceModel.setUpdatedAt((String) jsonObject.get(Constant.UPDATED_AT));
+        resourceModel.setCreatedAt((String) jsonObject.get(Constant.CREATED_AT));
         resourceModel.setUpdatedBy((String) jsonObject.get(Constant.UPDATED_BY));
-        resourceModel.setFeedback((String) jsonObject.get(Constant.FEEDBACK));
+        resourceModel.setUpdatedAt((String) jsonObject.get(Constant.UPDATED_AT));
+        resourceModel.setVerified((boolean) jsonObject.get(Constant.VERIFIED));
         return resourceModel;
     }
 
