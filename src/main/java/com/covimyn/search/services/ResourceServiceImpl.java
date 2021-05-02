@@ -39,7 +39,7 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public List<ResourceResponse> search(String id, String state, String city, String category,String subcategory ,String isVerified,
+    public List<ResourceResponse> search(String id, Long stateId, Long cityId, Long categoryId,Long subcategoryId ,String isVerified,
                                          Integer offset, Integer rows, String sortOrder) throws Exception{
         List<ResourceResponse> resourceResponses;
         List<Pair> must = new ArrayList<>();
@@ -47,20 +47,20 @@ public class ResourceServiceImpl implements ResourceService {
             must.add(new Pair(Constant.ID, id));
         }
 
-        if(state != null) {
-            must.add(new Pair(Constant.STATE, state));
+        if(!Objects.isNull(stateId)) {
+            must.add(new Pair(Constant.STATEID, stateId));
         }
 
-        if(city != null) {
-            must.add(new Pair(Constant.CITY, city));
+        if(cityId != null) {
+            must.add(new Pair(Constant.CITYID, cityId));
         }
 
-        if(category != null) {
-            must.add(new Pair(Constant.CATEGORY, category));
+        if(categoryId != null) {
+            must.add(new Pair(Constant.CATEGORYID, categoryId));
         }
 
-        if(!Objects.isNull(subcategory)){
-            must.add(new Pair(Constant.SUBCATEGORY, subcategory));
+        if(!Objects.isNull(subcategoryId)){
+            must.add(new Pair(Constant.SUBCATEGORYID, subcategoryId));
         }
 
         if(isVerified != null) {

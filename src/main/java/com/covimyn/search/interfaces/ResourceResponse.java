@@ -4,6 +4,7 @@
 
 package com.covimyn.search.interfaces;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,6 +56,7 @@ public class ResourceResponse {
     @NonNull
     private String phone1;
 
+    @JsonIgnore
     private String phone2;
 
     private String email;

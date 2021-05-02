@@ -32,17 +32,17 @@ public class ResourceController {
     //Query3: id
     @GetMapping(path = "/search")
     public ResponseEntity search(@QueryParam("id") String id,
-                                         @QueryParam("state") String state,
-                                         @QueryParam("city") String city,
-                                         @QueryParam("category") String category,
-                                         @QueryParam("subcategory") String subcategory,
+                                         @QueryParam("stateId") Long stateId,
+                                         @QueryParam("cityId") Long cityId,
+                                         @QueryParam("categoryId") Long categoryId,
+                                         @QueryParam("subcategoryId") Long subcategoryId,
                                          @QueryParam("isVerified") String isVerified,
                                          @DefaultValue("0") @QueryParam("offset") Integer offset,
                                          @DefaultValue("10") @QueryParam("rows") Integer rows,
                                          @DefaultValue("ASC") @QueryParam("sortOrder") String sortOrder
     ){
         try {
-            List<ResourceResponse> resourceResponseList = resourceService.search(id, state, city, category,subcategory, isVerified, offset, rows, sortOrder);
+            List<ResourceResponse> resourceResponseList = resourceService.search(id, stateId, cityId, categoryId,subcategoryId, isVerified, offset, rows, sortOrder);
             ResourceEntryResponse response = ResourceEntryResponse.of(resourceResponseList);
             logger.info("search api response: " +response );
             return new ResponseEntity(response,HttpStatus.OK);

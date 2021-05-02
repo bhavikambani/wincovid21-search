@@ -17,5 +17,5 @@ import java.util.List;
 public interface ResourceService {
 
     String upsert (ResourceRequest resourceRequest) throws IOException;
-    List<ResourceResponse> search(String id, String state, String city, String category, String subcategory,String isVerified, Integer offset, Integer rows, String sortOrder) throws Exception;
+    List<ResourceResponse> search(String id, Long stateId, Long cityId, Long categoryId, Long subcategoryId,String isVerified, Integer offset, Integer rows, String sortOrder) throws Exception;
 }
