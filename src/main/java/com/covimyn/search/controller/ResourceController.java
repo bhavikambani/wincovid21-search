@@ -3,7 +3,10 @@ package com.covimyn.search.controller;
 import com.covimyn.search.interfaces.ResourceEntryResponse;
 import com.covimyn.search.interfaces.ResourceRequest;
 import com.covimyn.search.interfaces.ResourceResponse;
+import com.covimyn.search.pojo.Pair;
 import com.covimyn.search.services.ResourceService;
+import com.covimyn.search.utility.Constant;
+import com.covimyn.search.utility.UserType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.ws.rs.QueryParam;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,9 +31,6 @@ public class ResourceController {
     @Autowired
     ResourceService resourceService;
 
-    //Query1: state, city, resourceType
-    //Query2: state, city, resourceType,isVerified
-    //Query3: id
     @GetMapping(path = "/search")
     public ResponseEntity search(@QueryParam("id") String id,
                                          @QueryParam("stateId") Long stateId,
@@ -39,10 +40,23 @@ public class ResourceController {
                                          @QueryParam("isVerified") String isVerified,
                                          @DefaultValue("0") @QueryParam("offset") Integer offset,
                                          @DefaultValue("10") @QueryParam("rows") Integer rows,
-                                         @DefaultValue("ASC") @QueryParam("sortOrder") String sortOrder
+                                         @DefaultValue("ASC") @QueryParam("sortOrder") String sortOrder,
+                                         @DefaultValue("seeker") @QueryParam("userType") String userType
     ){
         try {
-            ResourceEntryResponse response = resourceService.search(id, stateId, cityId, categoryId, subcategoryId, isVerified, offset, rows, sortOrder);
+            List<Pair> must = new ArrayList<>();
+            must.add(new Pair(Constant.ID, id));
+            must.add(new Pair(Constant.CITYID, cityId));
+            must.add(new Pair(Constant.CATEGORYID, categoryId));
+            must.add(new Pair(Constant.STATEID, stateId));
+            must.add(new Pair(Constant.CATEGORYID, categoryId));
+            must.add(new Pair(Constant.VERIFIED, isVerified));
+
+            if(userType == null) {
+                userType = UserType.seeker.name();
+            }
+
+            ResourceEntryResponse response = resourceService.search(must, new ArrayList<Pair>(), offset, rows, UserType.valueOf(userType));
             logger.info("search api response: " +response );
             return new ResponseEntity(response,HttpStatus.OK);
         } catch (Exception e) {

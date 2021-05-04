@@ -12,6 +12,7 @@ import com.covimyn.search.interfaces.ResourceResponse;
 import com.covimyn.search.model.ResourceModel;
 import com.covimyn.search.pojo.Pair;
 import com.covimyn.search.utility.Constant;
+import com.covimyn.search.utility.UserType;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,44 +41,40 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public ResourceEntryResponse search(String id, Long stateId, Long cityId, Long categoryId, Long subcategoryId, String isVerified,
-                                        Integer offset, Integer rows, String sortOrder) throws Exception {
+    public ResourceEntryResponse search(List<Pair> mustParams, List<Pair> shouldParams, Integer offset, Integer rows, UserType userType)
+            throws Exception {
         List<ResourceResponse> resourceResponses;
         List<Pair> must = new ArrayList<>();
-        if (id != null) {
-            must.add(new Pair(Constant.ID, id));
+        List<Pair> should = new ArrayList<>();
+
+        for(Pair pair : mustParams) {
+            if(pair.getValue() != null) {
+                must.add(pair);
+            }
         }
 
-        if (!Objects.isNull(stateId)) {
-            must.add(new Pair(Constant.STATEID, stateId));
+        for(Pair pair : shouldParams) {
+            if(pair.getValue() != null) {
+                should.add(pair);
+            }
         }
 
-        if (cityId != null) {
-            must.add(new Pair(Constant.CITYID, cityId));
-        }
+        offset = offset == null ? 0 : offset;
+        rows = rows == null ? 10 : rows;
 
-        if (categoryId != null) {
-            must.add(new Pair(Constant.CATEGORYID, categoryId));
+        List<Pair> sortOrder = new ArrayList<>();
+        if(userType == UserType.seeker) {
+            sortOrder.add(new Pair(Constant.VERIFIED, Constant.DESCENDING));
+            sortOrder.add(new Pair(Constant.AVAILABLE, Constant.DESCENDING));
         }
-
-        if (!Objects.isNull(subcategoryId)) {
-            must.add(new Pair(Constant.SUBCATEGORYID, subcategoryId));
+        else {
+            must.add(new Pair(Constant.AVAILABLE, false));
+            sortOrder.add(new Pair(Constant.VERIFIED, Constant.DESCENDING));
         }
+        sortOrder.add(new Pair(Constant.UPDATED_AT, Constant.DESCENDING));
 
-        if (isVerified != null) {
-            must.add(new Pair(Constant.VERIFIED, Boolean.parseBoolean(isVerified)));
-        }
-
-        if (Objects.isNull(offset)) {
-            offset = 0;
-        }
-
-        if (Objects.isNull(rows)) {
-            rows = 10;
-        }
-
-        List<ResourceModel> resourceModels = resourceDao.searchByLatest(must, new ArrayList<Pair>(), offset, rows);
-        long count = resourceDao.count(must, new ArrayList<Pair>());
+        List<ResourceModel> resourceModels = resourceDao.searchByLatest(must, should, sortOrder, offset, rows);
+        long count = resourceDao.count(must, new ArrayList<>());
 
         List<ResourceModel> verifiedResults = resourceModels.stream().filter(ResourceModel::isVerified).collect(Collectors.toList());
         List<ResourceModel> unVerifiedResults = resourceModels.stream().filter(resourceModel -> !resourceModel.isVerified()).collect(Collectors.toList());

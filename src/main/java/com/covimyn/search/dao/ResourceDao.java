@@ -15,7 +15,6 @@ import java.util.List;
 public interface ResourceDao {
 
     String upsert(ResourceModel resourceModel) throws IOException;
-    List<ResourceModel> search(List<Pair> must, List<Pair> should, int page, int size) throws Exception;
-    List<ResourceModel> searchByLatest(List<Pair> must, List<Pair> should, int page, int size) throws Exception;
+    List<ResourceModel> searchByLatest(List<Pair> must, List<Pair> should, List<Pair> sortOrder, int page, int size) throws Exception;
     long count(List<Pair> must, List<Pair> should) throws Exception;
 }

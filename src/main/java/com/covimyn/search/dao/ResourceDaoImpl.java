@@ -53,20 +53,8 @@ public class ResourceDaoImpl implements ResourceDao {
     }
 
     @Override
-    public List<ResourceModel> search(List<Pair> must, List<Pair> should, int page, int size) throws Exception {
-        JSONObject esSearchQuery = esQueryBuilder.generateSearchQueryWithPageAndSize(must, should, page, size);
-        ApiHelperResponse response = httpHelper.makeHttpPostRequest(esResourceEndPoint + "/_search", esSearchQuery);
-        if(response.getStatusCode() != HttpStatus.SC_OK) {
-            throw new RuntimeException("Returned non 200 response code on persistence");
-        }
-        JSONObject jsonResponseObject = (JSONObject)jsonParser.parse(response.getPayload().toString());
-        return getResourceModelsFromEsResponse(jsonResponseObject);
-    }
-
-    @Override
-    public List<ResourceModel> searchByLatest(List<Pair> must, List<Pair> should, int page, int size) throws Exception {
-        Pair sortBy = new Pair(Constant.UPDATED_AT, "desc");
-        JSONObject esSearchQuery = esQueryBuilder.generateSearchQueryWithSort(must, should, page, size, sortBy);
+    public List<ResourceModel> searchByLatest(List<Pair> must, List<Pair> should, List<Pair> sortOrder, int page, int size) throws Exception {
+        JSONObject esSearchQuery = esQueryBuilder.generateSearchQueryWithPageAndSizeSort(must, should, page, size, sortOrder);
         logger.info("Elastic search query= "+esSearchQuery.toString());
         ApiHelperResponse response = httpHelper.makeHttpPostRequest(esResourceEndPoint + "/_search", esSearchQuery);
         logger.info("Elastic search response= "+response.toString());

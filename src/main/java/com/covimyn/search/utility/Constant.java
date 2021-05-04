@@ -8,6 +8,9 @@ public class Constant {
 
     public static final String ES_RESOURCE_INDEX_TYPE = "resource_type";
 
+    public static final String ASCENDING = "asc";
+    public static final String DESCENDING = "desc";
+
     //ES INDEX KEYS
     public static final String ID = "id";
     public static final String NAME = "name";

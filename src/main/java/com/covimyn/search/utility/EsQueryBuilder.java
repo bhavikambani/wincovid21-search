@@ -63,10 +63,12 @@ public class EsQueryBuilder {
     }
 
 
-    public JSONObject generateSearchQueryWithSort(List<Pair> mustParams, List<Pair> shouldParams, int page, int size,
-                                                  Pair sortParam) {
+    public JSONObject generateSearchQueryWithPageAndSizeSort(List<Pair> mustParams, List<Pair> shouldParams, int page, int size,
+                                                  List<Pair> sortOrder) {
         JSONObject sort = new JSONObject();
-        sort.put(sortParam.getKey(), sortParam.getValue());
+        for(Pair pair : sortOrder) {
+            sort.put(pair.getKey(), pair.getValue());
+        }
         JSONObject payload = generateSearchQueryWithPageAndSize(mustParams, shouldParams, page, size);
         payload.put("sort", sort);
         return payload;
