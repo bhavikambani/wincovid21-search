@@ -7,6 +7,7 @@ import com.covimyn.search.pojo.Pair;
 import com.covimyn.search.services.ResourceService;
 import com.covimyn.search.utility.Constant;
 import com.covimyn.search.utility.UserType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,15 +47,17 @@ public class ResourceController {
         try {
             List<Pair> must = new ArrayList<>();
             must.add(new Pair(Constant.ID, id));
+            must.add(new Pair(Constant.STATEID, stateId));
             must.add(new Pair(Constant.CITYID, cityId));
             must.add(new Pair(Constant.CATEGORYID, categoryId));
-            must.add(new Pair(Constant.STATEID, stateId));
-            must.add(new Pair(Constant.CATEGORYID, categoryId));
+            must.add(new Pair(Constant.SUBCATEGORYID, subcategoryId));
             must.add(new Pair(Constant.VERIFIED, isVerified));
 
             if(userType == null) {
                 userType = UserType.seeker.name();
             }
+
+            logger.info(new ObjectMapper().writeValueAsString(must));
 
             ResourceEntryResponse response = resourceService.search(must, new ArrayList<Pair>(), offset, rows, UserType.valueOf(userType));
             logger.info("search api response: " +response );
