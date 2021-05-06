@@ -10,6 +10,11 @@ public class Constant {
 
     public static final String ASCENDING = "asc";
     public static final String DESCENDING = "desc";
+    public static final String RANGE = "range";
+    public static final String QUERY = "query";
+    public static final String BOOL = "bool";
+    public static final String MUST = "must";
+    public static final String GTE = "gte";
 
     //ES INDEX KEYS
     public static final String ID = "id";

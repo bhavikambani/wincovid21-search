@@ -8,11 +8,16 @@ import com.covimyn.search.services.ResourceService;
 import com.covimyn.search.utility.Constant;
 import com.covimyn.search.utility.UserType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.ws.rs.DefaultValue;
+
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -77,6 +82,25 @@ public class ResourceController {
         } catch (IOException e) {
             logger.error("Exception in upsert request:",e);
             return new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(path = "/dump")
+    public ResponseEntity downloadDump(
+                                 @QueryParam("isVerified") boolean isVerified,
+                                 @QueryParam("date") String date){
+        try {
+            List<Pair> must = new ArrayList<>();
+            must.add(new Pair(Constant.VERIFIED, isVerified));
+            logger.info(new ObjectMapper().writeValueAsString(must));
+            InputStreamResource file = new InputStreamResource(resourceService.externalDownload(must, date));
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=wincovid-" + date+".csv")
+                    .contentType(MediaType.parseMediaType("application/csv"))
+                    .body(file);
+        } catch (Exception e) {
+            logger.error("Exception in search request:", e);
+            return new ResponseEntity(ResourceEntryResponse.errorResponseOfException(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

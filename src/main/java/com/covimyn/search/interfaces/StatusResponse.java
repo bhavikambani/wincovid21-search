@@ -15,12 +15,10 @@ public class StatusResponse {
     }
 
     public StatusResponse(StatusResponse.Type type) {
-        this.statusType = StatusResponse.Type.SUCCESS;
         this.statusType = type;
     }
 
     public StatusResponse(StatusResponse.Type type, long totalCount) {
-        this.statusType = StatusResponse.Type.SUCCESS;
         this.statusType = type;
         this.totalCount = totalCount;
     }

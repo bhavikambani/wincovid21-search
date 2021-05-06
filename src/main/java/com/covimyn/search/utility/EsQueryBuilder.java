@@ -5,6 +5,7 @@
 package com.covimyn.search.utility;
 
 import com.covimyn.search.pojo.Pair;
+import com.covimyn.search.pojo.RangeEntity;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Component;
@@ -21,21 +22,25 @@ public class EsQueryBuilder {
         JSONArray must = new JSONArray();
         JSONArray should = new JSONArray();
 
-
-        for(Pair e : mustParams) {
-            JSONObject term = new JSONObject();
-            JSONObject object = new JSONObject();
-            object.put(e.getKey(), e.getValue());
-            term.put("term", object);
-            must.add(term);
+        if(mustParams != null) {
+            for (Pair e : mustParams) {
+                JSONObject term = new JSONObject();
+                JSONObject object = new JSONObject();
+                object.put(e.getKey(), e.getValue());
+                term.put("term", object);
+                must.add(term);
+            }
         }
 
-        for(Pair e : shouldParams) {
-            JSONObject term = new JSONObject();
-            JSONObject object = new JSONObject();
-            object.put(e.getKey(), e.getValue());
-            term.put("term", object);
-            should.add(term);
+
+        if(shouldParams != null) {
+            for (Pair e : shouldParams) {
+                JSONObject term = new JSONObject();
+                JSONObject object = new JSONObject();
+                object.put(e.getKey(), e.getValue());
+                term.put("term", object);
+                should.add(term);
+            }
         }
 
         if(shouldParams != null && shouldParams.size() > 0) {
@@ -71,6 +76,32 @@ public class EsQueryBuilder {
         }
         JSONObject payload = generateSearchQueryWithPageAndSize(mustParams, shouldParams, page, size);
         payload.put("sort", sort);
+        return payload;
+    }
+
+    public JSONObject generateSearchQueryWithPageSizeSortAndRange(List<Pair> mustParams, List<Pair> shouldParams, int page, int size,
+                                                                  List<Pair> sortOrder, RangeEntity rangeEntity) {
+        JSONObject payload = generateSearchQueryWithPageAndSizeSort(mustParams, shouldParams, page, size, sortOrder);
+        if(rangeEntity == null || (rangeEntity.getParam1() == null && rangeEntity.getParam2() == null)) {
+            return payload;
+        }
+        JSONObject range = new JSONObject();
+        JSONObject fieldObjVal = new JSONObject();
+        if(rangeEntity.getParam1() != null) {
+            fieldObjVal.put(rangeEntity.getParam1(), rangeEntity.getValue1());
+        }
+        if(rangeEntity.getParam2() != null) {
+            fieldObjVal.put(rangeEntity.getParam2(), rangeEntity.getValue2());
+        }
+
+        JSONObject fieldObj = new JSONObject();
+        fieldObj.put(rangeEntity.getField(), fieldObjVal);
+
+        range.put(Constant.RANGE, fieldObj);
+        JSONObject query = (JSONObject)payload.get(Constant.QUERY);
+        JSONObject bool = (JSONObject) query.get(Constant.BOOL);
+        JSONArray must = (JSONArray) bool.get(Constant.MUST);
+        must.add(range);
         return payload;
     }
 }

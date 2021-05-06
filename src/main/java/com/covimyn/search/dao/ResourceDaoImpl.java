@@ -7,6 +7,7 @@ package com.covimyn.search.dao;
 import com.covimyn.search.model.ResourceModel;
 import com.covimyn.search.pojo.ApiHelperResponse;
 import com.covimyn.search.pojo.Pair;
+import com.covimyn.search.pojo.RangeEntity;
 import com.covimyn.search.utility.Constant;
 import com.covimyn.search.utility.EsQueryBuilder;
 import com.covimyn.search.utility.HttpHelper;
@@ -53,16 +54,20 @@ public class ResourceDaoImpl implements ResourceDao {
     }
 
     @Override
-    public List<ResourceModel> searchByLatest(List<Pair> must, List<Pair> should, List<Pair> sortOrder, int page, int size) throws Exception {
-        JSONObject esSearchQuery = esQueryBuilder.generateSearchQueryWithPageAndSizeSort(must, should, page, size, sortOrder);
+    public List<ResourceModel> searchByLatest(List<Pair> must, List<Pair> should, List<Pair> sortOrder, int page,
+                                              int size, RangeEntity rangeEntity) throws Exception {
+        JSONObject esSearchQuery = esQueryBuilder.generateSearchQueryWithPageSizeSortAndRange(must, should, page, size,
+                sortOrder, rangeEntity);
         logger.info("Elastic search query= "+esSearchQuery.toString());
         ApiHelperResponse response = httpHelper.makeHttpPostRequest(esResourceEndPoint + "/_search", esSearchQuery);
-        logger.info("Elastic search response= "+response.toString());
+        logger.debug("Elastic search response= "+response.toString());
         if(response.getStatusCode() != HttpStatus.SC_OK) {
             throw new RuntimeException("Returned non 200 response code on persistence");
         }
         JSONObject jsonResponseObject = (JSONObject)jsonParser.parse(response.getPayload().toString());
-        return getResourceModelsFromEsResponse(jsonResponseObject);
+        List<ResourceModel> resourceModels = getResourceModelsFromEsResponse(jsonResponseObject);
+        logger.info("Received {} result from ES", resourceModels.size());
+        return resourceModels;
     }
 
     @Override
@@ -116,5 +121,4 @@ public class ResourceDaoImpl implements ResourceDao {
         resourceModel.setVerified((boolean) jsonObject.get(Constant.VERIFIED));
         return resourceModel;
     }
-
 }
