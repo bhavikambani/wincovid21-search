@@ -2,18 +2,18 @@ package com.covimyn.search.controller;
 
 import com.covimyn.search.interfaces.ResourceEntryResponse;
 import com.covimyn.search.interfaces.ResourceRequest;
-import com.covimyn.search.interfaces.ResourceResponse;
 import com.covimyn.search.pojo.Pair;
 import com.covimyn.search.services.ResourceService;
 import com.covimyn.search.utility.Constant;
+import com.covimyn.search.utility.OperationType;
 import com.covimyn.search.utility.UserType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.ws.rs.DefaultValue;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,6 +33,11 @@ import java.util.List;
 public class ResourceController {
 
     private static final Logger logger = LoggerFactory.getLogger(ResourceController.class);
+    @Value("${google.sheet.id}")
+    private String sheetId;
+
+    @Value("${google.sheet.name}")
+    private String sheetName;
 
     @Autowired
     ResourceService resourceService;
@@ -86,18 +91,29 @@ public class ResourceController {
     }
 
     @GetMapping(path = "/dump")
-    public ResponseEntity downloadDump(
+    public ResponseEntity dumpOperation(
                                  @QueryParam("isVerified") boolean isVerified,
-                                 @QueryParam("date") String date){
+                                 @QueryParam("date") String date,
+                                 @QueryParam("operation") String operation){
         try {
             List<Pair> must = new ArrayList<>();
             must.add(new Pair(Constant.VERIFIED, isVerified));
             logger.info(new ObjectMapper().writeValueAsString(must));
-            InputStreamResource file = new InputStreamResource(resourceService.externalDownload(must, date));
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=wincovid-" + date+".csv")
-                    .contentType(MediaType.parseMediaType("application/csv"))
-                    .body(file);
+
+            if(operation != null && operation.equals(OperationType.upload.name())) {
+                logger.info("Performing upload operations");
+                resourceService.upload(must, date, sheetId, sheetName);
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            else {
+                logger.info("Performing download operations");
+                InputStreamResource file = new InputStreamResource(resourceService.download(must, date));
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=wincovid-" + date+".csv")
+                        .contentType(MediaType.parseMediaType("application/csv"))
+                        .body(file);
+            }
+
         } catch (Exception e) {
             logger.error("Exception in search request:", e);
             return new ResponseEntity(ResourceEntryResponse.errorResponseOfException(),HttpStatus.INTERNAL_SERVER_ERROR);

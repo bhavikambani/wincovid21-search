@@ -4,7 +4,7 @@
 
 package com.covimyn.search.exceptions;
 
-import com.covimyn.search.services.DateUtil;
+import com.covimyn.search.utility.DateUtil;
 
 public class DateFormatNotSupportedException extends RuntimeException {
     public DateFormatNotSupportedException() {

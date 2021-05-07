@@ -2,7 +2,7 @@
  * Created by Avishek Gurung on 2021-05-05
  */
 
-package com.covimyn.search.services;
+package com.covimyn.search.utility;
 
 import com.covimyn.search.exceptions.DateFormatNotSupportedException;
 import org.springframework.stereotype.Component;
@@ -34,6 +34,17 @@ public class DateUtil {
     public String epochToDate(Long milliseconds) {
         Date date = new Date(milliseconds);
         DateFormat dateFormat = new SimpleDateFormat(DISPLAY_DATE_FORMAT);
+        dateFormat.setTimeZone(TimeZone.getTimeZone(TIME_ZONE));
+        String displayDate = dateFormat.format(date);
+        return displayDate;
+    }
+
+    public String manipulateDate(long hour, boolean negate) {
+        Long currMilliseconds = System.currentTimeMillis();
+        long toMilliseconds = hour * 60 *60 *1000;
+        currMilliseconds = negate ? currMilliseconds - toMilliseconds : currMilliseconds + toMilliseconds;
+        Date date = new Date(currMilliseconds);
+        DateFormat dateFormat = new SimpleDateFormat(SUPPORTED_DATE_FORMAT);
         dateFormat.setTimeZone(TimeZone.getTimeZone(TIME_ZONE));
         String displayDate = dateFormat.format(date);
         return displayDate;

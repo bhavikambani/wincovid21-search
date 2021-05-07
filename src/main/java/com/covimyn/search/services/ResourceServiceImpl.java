@@ -4,7 +4,6 @@
 
 package com.covimyn.search.services;
 
-import com.covimyn.search.controller.ResourceController;
 import com.covimyn.search.dao.ResourceDao;
 import com.covimyn.search.interfaces.ResourceEntryResponse;
 import com.covimyn.search.interfaces.ResourceRequest;
@@ -14,20 +13,19 @@ import com.covimyn.search.pojo.Pair;
 import com.covimyn.search.pojo.RangeEntity;
 import com.covimyn.search.utility.Constant;
 import com.covimyn.search.utility.CsvHelper;
+import com.covimyn.search.utility.DateUtil;
 import com.covimyn.search.utility.UserType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -38,6 +36,7 @@ public class ResourceServiceImpl implements ResourceService {
     private ResourceDao resourceDao;
     private DateUtil dateUtil;
     private CsvHelper csvHelper;
+    private ObjectMapper objectMapper;
 
     @Override
     public String upsert(ResourceRequest resourceRequest) throws IOException {
@@ -47,10 +46,14 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public ByteArrayInputStream externalDownload(List<Pair> mustParams, String queryDate) throws Exception {
+    public ByteArrayInputStream download(List<Pair> mustParams, String queryDate) throws Exception {
+        List<ResourceModel> resourceModels = getResourceModelsForDownload(mustParams, queryDate);
+        return csvHelper.download(resourceModels);
+    }
+
+    private List<ResourceModel> getResourceModelsForDownload(List<Pair> mustParams, String queryDate) throws Exception {
         int page = 0;
         int size = 10000; //getting max page.
-
 
         Long queryDateInMilli = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
         if(queryDate != null) {
@@ -64,7 +67,15 @@ public class ResourceServiceImpl implements ResourceService {
         sortOrder.add(new Pair(Constant.AVAILABLE, Constant.DESCENDING));
         sortOrder.add(new Pair(Constant.UPDATED_AT, Constant.DESCENDING));
         List<ResourceModel> resourceModels = resourceDao.searchByLatest(mustParams, null, sortOrder, 0, size, rangeEntity);
-        return csvHelper.convertResourceModelToCSV(resourceModels);
+        return resourceModels;
+    }
+
+    @Override
+    public void upload(List<Pair> mustParams, String queryDate, String sheetId, String sheetName)
+            throws Exception {
+        List<ResourceModel> resourceModels = getResourceModelsForDownload(mustParams, queryDate);
+        UpdateValuesResponse response = csvHelper.upload(sheetName, sheetId, resourceModels);
+        logger.info("Published to google sheet with meta-info {}", objectMapper.writeValueAsString(response));
     }
 
     @Override
@@ -102,13 +113,6 @@ public class ResourceServiceImpl implements ResourceService {
 
         List<ResourceModel> resourceModels = resourceDao.searchByLatest(must, should, sortOrder, offset, rows, null);
         long count = resourceDao.count(must, new ArrayList<>());
-
-        //List<ResourceModel> verifiedResults = resourceModels.stream().filter(ResourceModel::isVerified).collect(Collectors.toList());
-        //List<ResourceModel> unVerifiedResults = resourceModels.stream().filter(resourceModel -> !resourceModel.isVerified()).collect(Collectors.toList());
-
-        // add first verified and then unverified results in response
-        //resourceResponses = verifiedResults.stream().map(this::transformResourceModelToResourceResponse).collect(Collectors.toList());
-        //unVerifiedResults.stream().map(this::transformResourceModelToResourceResponse).forEach(resourceResponses::add);
 
         resourceResponses = resourceModels.stream().map(this::transformResourceModelToResourceResponse).collect(Collectors.toList());
         logger.info("Returned result size= " + resourceResponses.size());
