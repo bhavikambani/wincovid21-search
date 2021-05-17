@@ -70,4 +70,7 @@ public class ResourceRequest {
     @NonNull
     private boolean isVerified;
 
+    @NonNull
+    private boolean isValid;
+
 }

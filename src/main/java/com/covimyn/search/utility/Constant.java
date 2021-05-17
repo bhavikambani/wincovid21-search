@@ -39,4 +39,5 @@ public class Constant {
     public static final String UPDATED_BY = "updatedBy";
     public static final String UPDATED_AT = "updatedAt";
     public static final String VERIFIED = "verified";
+    public static final String VALID = "valid";
 }

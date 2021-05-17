@@ -76,4 +76,7 @@ public class ResourceResponse {
     @NonNull
     private boolean isVerified;
 
+    @NonNull
+    private boolean isValid;
+
 }

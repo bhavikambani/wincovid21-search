@@ -119,6 +119,7 @@ public class ResourceDaoImpl implements ResourceDao {
         resourceModel.setUpdatedBy((String) jsonObject.get(Constant.UPDATED_BY));
         resourceModel.setUpdatedAt((String) jsonObject.get(Constant.UPDATED_AT));
         resourceModel.setVerified((boolean) jsonObject.get(Constant.VERIFIED));
+        resourceModel.setValid((boolean) jsonObject.get(Constant.VALID));
         return resourceModel;
     }
 }

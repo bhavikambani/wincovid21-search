@@ -151,6 +151,7 @@ public class ResourceServiceImpl implements ResourceService {
         resourceModel.setUpdatedBy(resourceRequest.getUpdatedBy());
         resourceModel.setUpdatedAt(resourceRequest.getUpdatedAt());
         resourceModel.setVerified(resourceRequest.isVerified());
+        resourceModel.setValid(resourceRequest.isValid());
         return resourceModel;
     }
 
@@ -178,6 +179,7 @@ public class ResourceServiceImpl implements ResourceService {
         resourceResponse.setUpdatedBy(resourceModel.getUpdatedBy());
         resourceResponse.setUpdatedAt(resourceModel.getUpdatedAt());
         resourceResponse.setVerified(resourceModel.isVerified());
+        resourceResponse.setValid(resourceModel.isValid());
         return resourceResponse;
     }
 

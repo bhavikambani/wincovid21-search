@@ -70,4 +70,7 @@ public class ResourceModel {
 
     @NonNull
     private boolean isVerified;
+
+    @NonNull
+    private boolean isValid;
 }

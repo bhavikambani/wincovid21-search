@@ -136,6 +136,7 @@ public class CsvHelper {
                 add(Constant.CREATED_BY);
                 add(Constant.UPDATED_BY);
                 add(Constant.CREATED_AT);
+                add(Constant.VALID);
                 add(Constant.ID);
             }
         };
@@ -179,6 +180,7 @@ public class CsvHelper {
         row.add(createdBy);
         row.add(updatedBy);
         row.add(dateUtil.epochToDate(Long.parseLong(resourceModel.getCreatedAt())));
+        row.add(String.valueOf(resourceModel.isValid()));
         row.add(id);
         return row;
     }

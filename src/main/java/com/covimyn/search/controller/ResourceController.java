@@ -62,6 +62,7 @@ public class ResourceController {
             must.add(new Pair(Constant.CATEGORYID, categoryId));
             must.add(new Pair(Constant.SUBCATEGORYID, subcategoryId));
             must.add(new Pair(Constant.VERIFIED, isVerified));
+            must.add(new Pair(Constant.VALID, true));
 
             if(userType == null) {
                 userType = UserType.seeker.name();
